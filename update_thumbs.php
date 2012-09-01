@@ -19,11 +19,8 @@
 	$file_names = scanFileNameRecursivly($path_to_scan);
 	foreach ($file_names as $file_name) {
 		if ($file_name[strlen($file_name)-1] != '.') {
-			//echo $file_name.'<br>';
 			createthumb($file_name, $thumb_size, false);
-			echo '.';
-			flush();
-			ob_flush();
+			echo 'Processed: '.$file_name.'<br>';
 		}
 	}
 	

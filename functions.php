@@ -16,7 +16,7 @@ function createthumb($filename, $size, $output_image=true) {
 		header('Content-type: image/jpeg');
 		$errorimage = ImageCreateFromJPEG('images/questionmark.jpg');
 		ImageJPEG($errorimage,null,90);
-		exit;
+		return;
 	}
 	
 	// Display error image if file exists, but can't be opened
@@ -24,7 +24,7 @@ function createthumb($filename, $size, $output_image=true) {
 		header('Content-type: image/jpeg');
 		$errorimage = ImageCreateFromJPEG('images/cannotopen.jpg');
 		ImageJPEG($errorimage,null,90);
-		exit;
+		return;
 	}
 	
 	// Create the directory '/thumbs' if it doesn't exist
@@ -35,7 +35,7 @@ function createthumb($filename, $size, $output_image=true) {
 	$thumb_path = 'thumbs/'.md5_file($filename).'.'.$extension;
 	if (file_exists($thumb_path) && $output_image) {
 		readfile($thumb_path);
-		exit;
+		return;
 	}
 	
 	// Define variables
