@@ -150,6 +150,8 @@ $dirs = array();
 	while (false !== ($file = readdir($handle)))
     {
 // 1. LOAD FOLDERS
+		//$file = str_replace("'","\"",$file);
+		//$file = urlencode($file);
 		if (is_directory($currentdir . "/" . $file))
 			{ 
 				if ($file != "." && $file != ".." )
@@ -161,7 +163,7 @@ $dirs = array();
 						$dirs[] = array(
 							"name" => $file,
 							"date" => filemtime($currentdir . "/" . $file . "/folder.jpg"),
-							"html" => "<li><a href='?dir=" .ltrim($_GET['dir'] . "/" . $file, "/") . "'><em>" . padstring($file, $label_max_length) . "</em><span></span><img src='" . GALLERY_ROOT . "createthumb.php?filename=$currentdir/" . $file . "/folder.jpg&amp;size=$thumb_size'  alt='$label_loading' /></a></li>");
+							"html" => '<li><a href="?dir=' .ltrim($_GET["dir"] . '/' . $file, '/') . '"><em>' . padstring($file, $label_max_length) . '</em><span></span><img src="' . GALLERY_ROOT . 'createthumb.php?filename='.$currentdir.'/' . $file . '/folder.jpg&amp;size='.$thumb_size.'"  alt="'.$label_loading.'" /></a></li>');
 					}  else
 					{
 					// Set thumbnail to first image found (if any):
@@ -171,13 +173,13 @@ $dirs = array();
 						$dirs[] = array(
 							"name" => $file,
 							"date" => filemtime($currentdir . "/" . $file),
-							"html" => "<li><a href='?dir=" . ltrim($_GET['dir'] . "/" . $file, "/") . "'><em>" . padstring($file, $label_max_length) . "</em><span></span><img src='" . GALLERY_ROOT . "createthumb.php?filename=$thumbdir/" . $file . "/" . $firstimage . "&amp;size=$thumb_size'  alt='$label_loading' /></a></li>");
+							"html" => '<li><a href="?dir=' . ltrim($_GET["dir"] . '/' . $file, '/') . '"><em>' . padstring($file, $label_max_length) . '</em><span></span><img src="' . GALLERY_ROOT . 'createthumb.php?filename='.$thumbdir.'/' . $file . '/' . $firstimage . '&amp;size='.$thumb_size.'"  alt="'.$label_loading.'" /></a></li>');
 						} else {
 						// If no folder.jpg or image is found, then display default icon:
 							$dirs[] = array(
 								"name" => $file,
 								"date" => filemtime($currentdir . "/" . $file),
-								"html" => "<li><a href='?dir=" . ltrim($_GET['dir'] . "/" . $file, "/") . "'><em>" . padstring($file) . "</em><span></span><img src='" . GALLERY_ROOT . "images/folder_" . strtolower($folder_color) . ".png' width='$thumb_size' height='$thumb_size' alt='$label_loading' /></a></li>");
+								"html" => '<li><a href="?dir=' . ltrim($_GET["dir"] . '/' . $file, '/') . '"><em>' . padstring($file) . '</em><span></span><img src="' . GALLERY_ROOT . 'images/folder_' . strtolower($folder_color) . '.png" width="'.$thumb_size.'" height="'.$thumb_size.'" alt="'.$label_loading.'" /></a></li>');
 						}
 					}
 				}
@@ -214,7 +216,7 @@ if (file_exists($currentdir ."/captions.txt"))
 			  				"name" => $file,
 							"date" => filemtime($currentdir . "/" . $file),
 							"size" => filesize($currentdir . "/" . $file),
-				  			"html" => "<li><a href='" . $currentdir . "/" . $file . "' rel='lightbox[billeder]' title='$img_captions[$file]'><span></span><img src='" . GALLERY_ROOT . "createthumb.php?filename=" . $thumbdir . "/" . $file . "&amp;size=$thumb_size' alt='$label_loading' /></a></li>");
+				  			"html" => '<li><a href="' . $currentdir . '/' . $file . '" rel="lightbox[billeder]" title="'.$img_captions[$file].'"><span></span><img src="' . GALLERY_ROOT . 'createthumb.php?filename=' . $thumbdir . '/' . $file . '&amp;size='.$thumb_size.'" alt="'.$label_loading.'" /></a></li>');
 		  			}
 					// Other filetypes
 					$extension = "";
@@ -233,7 +235,7 @@ if (file_exists($currentdir ."/captions.txt"))
 		  					"name" => $file,
 							"date" => filemtime($currentdir . "/" . $file),
 							"size" => filesize($currentdir . "/" . $file),
-			  				"html" => "<li><a href='" . $currentdir . "/" . $file . "' title='$file'><em-pdf>" . padstring($file, 20) . "</em-pdf><span></span><img src='" . GALLERY_ROOT . "images/filetype_" . $extension . ".png' width='$thumb_size' height='$thumb_size' alt='$file' /></a></li>");
+			  				"html" => '<li><a href="' . $currentdir . '/' . $file . '" title="'.$file.'"><em-pdf>' . padstring($file, 20) . '</em-pdf><span></span><img src="' . GALLERY_ROOT . 'images/filetype_' . $extension . '.png" width="'.$thumb_size.'" height="'.$thumb_size.'" alt="'.$file.'" /></a></li>');
         			}
      			}   		
 	}
@@ -293,12 +295,12 @@ if (sizeof($dirs) + sizeof($files) > $thumbs_pr_page)
 		if ($_GET["page"] == $i)
 			$page_navigation .= "$i";
 			else
-				$page_navigation .= "<a href='?dir=" . $_GET["dir"] . "&amp;page=" . ($i) . "'>" . $i . "</a>";
+				$page_navigation .= '<a href="?dir=' . $_GET['dir'] . '&amp;page=' . ($i) . '">' . $i . '</a>';
 		if ($i != ceil((sizeof($files) + sizeof($dirs)) / $thumbs_pr_page)) $page_navigation .= " | ";
 	}
 	//Insert link to view all images
 	if ($_GET["page"] == "all") $page_navigation .= " | $label_all";
-	else $page_navigation .= " | <a href='?dir=" . $_GET["dir"] . "&amp;page=all'>$label_all</a>";
+	else $page_navigation .= ' | <a href="?dir=' . $_GET['dir'] . '&amp;page=all">'.$label_all.'</a>';
 }
 
 //-----------------------
@@ -306,20 +308,20 @@ if (sizeof($dirs) + sizeof($files) > $thumbs_pr_page)
 //-----------------------
 if ($_GET['dir'] != "")
 {
-	$breadcrumb_navigation .= "<a href='?dir='>" . $label_home . "</a> > ";
+	$breadcrumb_navigation .= '<a href="?dir=">' . $label_home . '</a> > ';
 	$navitems = explode("/", $_REQUEST['dir']);
 	for($i = 0; $i < sizeof($navitems); $i++)
 	{
 		if ($i == sizeof($navitems)-1) $breadcrumb_navigation .= $navitems[$i];
 		else
 		{
-			$breadcrumb_navigation .= "<a href='?dir=";
+			$breadcrumb_navigation .= '<a href="?dir=';
 			for ($x = 0; $x <= $i; $x++)
 			{
 				$breadcrumb_navigation .= $navitems[$x];
-				if ($x < $i) $breadcrumb_navigation .= "/";
+				if ($x < $i) $breadcrumb_navigation .= '/';
 			}
-			$breadcrumb_navigation .= "'>" . $navitems[$i] . "</a> > ";
+			$breadcrumb_navigation .= '">' . $navitems[$i] . '</a> > ';
 		}
 	}
 } else $breadcrumb_navigation .= $label_home;
@@ -327,7 +329,7 @@ if ($_GET['dir'] != "")
 //Include hidden links for all images BEFORE current page so lightbox is able to browse images on different pages
 for ($y = 0; $y < $offset_start - sizeof($dirs); $y++)
 {	
-	$breadcrumb_navigation .= "<a href='" . $currentdir . "/" . $files[$y]["name"] . "' rel='lightbox[billeder]' class='hidden' title='" . $img_captions[$files[$y]["name"]] . "'></a>";
+	$breadcrumb_navigation .= '<a href="' . $currentdir . '/' . $files[$y]['name'] . '" rel="lightbox[billeder]" class="hidden" title="' . $img_captions[$files[$y]['name']] . '"></a>';
 }
 
 //-----------------------
@@ -359,14 +361,14 @@ for ($i = $offset_start - sizeof($dirs); $i < $offset_end && $offset_current < $
 //Include hidden links for all images AFTER current page so lightbox is able to browse images on different pages
 for ($y = $i; $y < sizeof($files); $y++)
 {	
-	$page_navigation .= "<a href='" . $currentdir . "/" . $files[$y]["name"] . "' rel='lightbox[billeder]'  class='hidden' title='" . $img_captions[$files[$y]["name"]] . "'></a>";
+	$page_navigation .= '<a href="' . $currentdir . '/' . $files[$y]['name'] . '" rel="lightbox[billeder]"  class="hidden" title="' . $img_captions[$files[$y]['name']] . '"></a>';
 }
 
 //-----------------------
 // OUTPUT MESSAGES
 //-----------------------
 if ($messages != "") {
-$messages = "<div id=\"topbar\">" . $messages . " <a href=\"#\" onclick=\"document.getElementById('topbar').style.display = 'none';\";><img src=\"images/close.png\" /></a></div>";
+$messages = '<div id=\'topbar\'>' . $messages . ' <a href=\'#\' onclick=\'document.getElementById("topbar").style.display = "none";\';><img src=\'images/close.png\' /></a></div>';
 }
 
 //PROCESS TEMPLATE FILE
