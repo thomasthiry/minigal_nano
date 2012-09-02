@@ -59,18 +59,20 @@ function createthumb($filename, $size, $output_image=true) {
     if (preg_match("/.jpg$|.jpeg$/i", $filename)) {
 		if (function_exists('exif_read_data') && function_exists('imagerotate')) {
 			$exif = exif_read_data($filename);
-			$ort = $exif['IFD0']['Orientation'];
-			$degrees = 0;
-		    switch($ort)
-		    {
-		        case 6: // 90 rotate right
-		            $degrees = 270;
-		        break;
-		        case 8:    // 90 rotate left
-		            $degrees = 90;
-		        break;
-		    }
-			if ($degrees != 0)	$target = imagerotate($target, $degrees, 0);
+			if (array_key_exists('IFD0',$exif)) {
+				$ort = $exif['IFD0']['Orientation'];
+				$degrees = 0;
+				switch($ort)
+				{
+					case 6: // 90 rotate right
+						$degrees = 270;
+					break;
+					case 8:    // 90 rotate left
+						$degrees = 90;
+					break;
+				}
+				if ($degrees != 0)	$target = imagerotate($target, $degrees, 0);
+			}
 		}
 	}
 	
